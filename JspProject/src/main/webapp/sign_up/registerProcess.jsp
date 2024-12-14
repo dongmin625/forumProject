@@ -61,7 +61,7 @@
 
         int rowsAffected = preparedStatement.executeUpdate();
         if (rowsAffected > 0) {
-            out.println("<script>alert('회원가입 성공!'); window.location='login.jsp';</script>");
+            out.println("<script>alert('회원가입 성공!'); window.location='../login/loginpage.jsp';</script>");
         } else {
             out.println("<script>alert('회원가입 실패!'); window.location='signup.jsp';</script>");
         }
