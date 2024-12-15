@@ -78,7 +78,7 @@
     </style>
 </head>
 <body>
-    <form action="registerProcess.jsp" method="POST">
+    <form action="loginProcess.jsp" method="GET"> 
         <h1>로그인</h1>
         
         <label for="email">이메일:</label>
@@ -88,8 +88,8 @@
         <input type="password" name="password" id="password" required>
         
         <div class="box">
-            <input type="submit" value="회원가입" onclick="location.href='../sign_up/signup.jsp'">
-            <input type="button" value="로그인" >
+            <input type="button" value="회원가입" onclick="location.href='../sign_up/signup.jsp'">
+            <input type="submit" value="로그인" >
         </div>
     </form>
 </body>
