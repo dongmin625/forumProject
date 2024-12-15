@@ -49,25 +49,37 @@
     System.out.println("닉네임: " + nickname);
 	
 	
-	// DB 연결 및 쿼리 실행 부분
-    String insertUserQuery = "INSERT INTO users (email, password, nickname) VALUES (?, ?, ?)";
-
+ 	// DB 연결 및 중복 이메일 체크
+    String checkEmailQuery = "SELECT COUNT(*) FROM users WHERE email = ?";
+    
     try (Connection connection = DriverManager.getConnection(jdbcUrl, dbUser, dbPassword);
-         PreparedStatement preparedStatement = connection.prepareStatement(insertUserQuery)) {
+         PreparedStatement preparedStatement = connection.prepareStatement(checkEmailQuery)) {
 
         preparedStatement.setString(1, email);
-        preparedStatement.setString(2, password);
-        preparedStatement.setString(3, nickname);
-
-        int rowsAffected = preparedStatement.executeUpdate();
-        if (rowsAffected > 0) {
-            out.println("<script>alert('회원가입 성공!'); window.location='../login/loginpage.jsp';</script>");
-        } else {
-            out.println("<script>alert('회원가입 실패!'); window.location='signup.jsp';</script>");
+        
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            if (resultSet.next() && resultSet.getInt(1) > 0) {
+                // 이미 등록된 이메일이 있음
+                out.println("<script>alert('이미 등록된 이메일입니다.'); window.location='signup.jsp';</script>");
+            } else {
+                // 이메일이 중복되지 않으면 회원가입 진행
+                String insertUserQuery = "INSERT INTO users (email, password, nickname) VALUES (?, ?, ?)";
+                try (PreparedStatement insertStatement = connection.prepareStatement(insertUserQuery)) {
+                    insertStatement.setString(1, email);
+                    insertStatement.setString(2, password);
+                    insertStatement.setString(3, nickname);
+                    
+                    int rowsAffected = insertStatement.executeUpdate();
+                    if (rowsAffected > 0) {
+                        out.println("<script>alert('회원가입 성공!'); window.location='../login/loginpage.jsp';</script>");
+                    } else {
+                        out.println("<script>alert('회원가입 실패!'); window.location='signup.jsp';</script>");
+                    }
+                }
+            }
         }
     } catch (SQLException e) {
         out.println("<script>alert('DB 연결 오류: " + e.getMessage() + "'); window.location='signup.jsp';</script>");
-        
         e.printStackTrace();
     }
 

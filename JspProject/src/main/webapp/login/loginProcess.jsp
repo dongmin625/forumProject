@@ -3,6 +3,7 @@
 <%@ page import="java.util.Properties" %>
 <%@ page import="java.io.InputStream" %>
 <%@ page import="java.sql.Connection"%>
+<%@ page import="jakarta.servlet.http.HttpSession" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -53,6 +54,11 @@
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
+                	// 로그인 성공 - 세션 생성
+                    HttpSession session2 = request.getSession();
+                    session.setAttribute("email", email);  // 사용자 이메일을 세션에 저장
+                    session.setAttribute("nickname", resultSet.getString("nickname"));  // 사용자 이름 저장
+                
                     // 로그인 성공
                     out.println("<script>alert('로그인 성공!'); window.location='../main_page/main.jsp';</script>");
                     out.println("<p>환영합니다, " + resultSet.getString("nickname") + "님!</p>");

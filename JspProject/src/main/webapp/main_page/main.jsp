@@ -1,5 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%
+    HttpSession session2 = request.getSession(false);  // 기존 세션 가져오기, 세션이 없으면 null 반환
+    if (session == null || session.getAttribute("email") == null) {
+        // 세션이 없거나 사용자 이메일이 세션에 없으면 로그인 페이지로 리디렉션
+        response.sendRedirect("../login/loginpage.jsp");
+        return;
+    }
+
+    String userName = (String) session.getAttribute("nickname");  // 세션에서 사용자 이름 가져오기
+%>
 <!DOCTYPE html>
 <html>
 <head>
