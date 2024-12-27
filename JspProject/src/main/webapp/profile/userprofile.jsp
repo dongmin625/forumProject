@@ -35,7 +35,7 @@
         /* 배경 및 레이아웃 스타일 */
         .container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 800px;
             margin: 50px auto;
             background-color: #fff;
             border-radius: 10px;
@@ -44,6 +44,7 @@
             display: flex; /* 왼쪽과 오른쪽을 flex로 배치 */
             flex-direction: row; /* 가로로 나열 */
             align-items: flex-start; /* 세로 중앙 정렬 */
+            height: auto;
         }
 
         /* 프로필 사진 스타일 */
@@ -90,9 +91,17 @@
         .profile-description p {
             font-size: 1rem;
             color: #333;
-            border-top: 1px solid #ddd;
             padding-top: 10px;
         }
+        button {
+        padding: 5px 10px;
+        background-color: #000000;
+        color: #FFFFFF;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        margin: 10px;
+    }
     </style>
 </head>
 <body>
@@ -132,24 +141,32 @@
             String profilePic = rs.getString("photo"); // 프로필 사진 경로
             String intro = rs.getString("introduce");  // 자기소개
 %>
+<div class="container">
+    <!-- 프로필 헤더 -->
+    <div class="profile-header">
+        <img src="<%= "../images/kham1.png" %>" alt="프로필 사진">
+        <h1><%= userName %></h1>
+    </div>
 
-        <div class="container">
-            <!-- 프로필 헤더 -->
-            <div class="profile-header">
-                <img src="<%= "../images/kham1.png" %>" alt="프로필 사진">
-                <h1><%= userName %></h1>
-            </div>
+    <!-- 오른쪽 정보 영역 -->
+    <div class="profile-info">
+        <!-- 프로필 사진 변경 버튼 -->
+        <form id="upload-form" action="uploadProfilePic.jsp" method="post" enctype="multipart/form-data">
+            <input type="file" name="profilePic" accept="image/*" style="display:none;" id="file-input">
+            <button type="button" onclick="document.getElementById('file-input').click();">프로필 사진 변경</button>
+            <button type="submit">업로드</button>
+        </form>
 
-            <!-- 기본 정보 -->
-            <div class="profile-info">
-                <p><strong>Email:</strong> <%= session.getAttribute("email") %></p>
-            </div>
+        <!-- 소개글 변경 버튼 -->
+        <button>소개글 변경</button>
 
-            <!-- 자기소개 -->
-            <div class="profile-description">
-                <p><strong>소개:</strong> <%= intro %></p>
-            </div>
+        <!-- 자기소개 -->
+        <div class="profile-description">
+            <p><strong>소개:</strong> <%= intro %></p>
         </div>
+    </div>
+</div>
+
 <%  
         } else {
             out.println("<h2>프로필 정보가 없습니다.</h2>");
